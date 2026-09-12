@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-%hodks^u@arq^bv-tms#o!v$c*p6_5o%yvw!!u+n9ber@*g9*f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -89,9 +89,13 @@ DATABASES = {
     }
 }
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
-db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age=500, ssl_require=True)
-DATABASES['default'].update(db_from_env)
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'].update(
+        dj_database_url.config(
+            conn_max_age=500,
+            ssl_require=True
+        )
+    )
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -136,5 +140,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_ROOT = os.path.join(BASE_DIR, STATIC_URL)
-django_heroku.settings(locals())
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+if os.environ.get('DATABASE_URL'):
+    django_heroku.settings(locals())
