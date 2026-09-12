@@ -2,18 +2,18 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width" />
-        <title>Покупка</title>
+        <title>Покупатель</title>
     </head>
     <body>
         <div>
-            <h3>Оформление покупки</h3>
+            <h3>Добавление покупателя</h3>
 
             <form method="post">
                 {% csrf_token %}
 
                 {{ form.as_p }}
 
-                <input type="submit" value="Оформить покупку" />
+                <input type="submit" value="Добавить покупателя" />
             </form>
 
             <p>
