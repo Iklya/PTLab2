@@ -2,20 +2,51 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 
-from .models import Product, Purchase
+from .models import Customer, Product, Purchase
 
-# Create your views here.
+
 def index(request):
     products = Product.objects.all()
-    context = {'products': products}
-    return render(request, 'shop/index.html', context)
+    customers = Customer.objects.all()
+
+    return render(
+        request,
+        'shop/index.html',
+        {
+            'products': products,
+            'customers': customers
+        }
+    )
+
+
+class CustomerCreate(CreateView):
+    model = Customer
+    fields = ['name', 'address']
+
+    def get_success_url(self):
+        return '/'
 
 
 class PurchaseCreate(CreateView):
     model = Purchase
-    fields = ['product', 'person', 'address']
+    fields = ['customer', 'product']
 
     def form_valid(self, form):
         self.object = form.save()
-        return HttpResponse(f'Спасибо за покупку, {self.object.person}!')
 
+        customer = self.object.customer
+
+        return HttpResponse(
+            f'''
+            <h3>Спасибо за покупку, {customer.name}!</h3>
+            <p>Общая сумма покупок:
+            {customer.total_spent()} руб.</p>
+            <p>Накопительная скидка:
+            {customer.discount_percent()}%</p>
+            <p>Сумма скидки:
+            {customer.discount_amount()} руб.</p>
+            <p><strong>К оплате:
+            {customer.total_with_discount()} руб.</strong></p>
+            <p><a href="/">Вернуться в магазин</a></p>
+            '''
+        )

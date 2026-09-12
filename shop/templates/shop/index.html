@@ -1,26 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Товары</title>
-</head>
-<body>
-    <div>
-        <h3>Список</h3>
-        <table>
-            <tr>
-                <td><p>Наименование</p></td>
-                <td><p>Цена</p></td>
-                <td></td>
-            </tr>
-            {% for p in products %}
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Магазин</title>
+    </head>
+    <body>
+        <div>
+            <h2>Магазин</h2>
+
+            <p>
+                <a href="/customer/add/">Добавить покупателя</a>
+            </p>
+
+            <h3>Товары</h3>
+
+            <table border="1">
                 <tr>
-                    <td><p>{{ p.name }}</p></td>
-                    <td><p>{{ p.price }}</p></td>
-                    <td><p><a href="/buy/{{ p.id }}">Купить</a></p></td>
+                    <th>Наименование</th>
+                    <th>Цена</th>
                 </tr>
-            {% endfor %}
-        </table>
-    </div>
-</body>
+
+                {% for p in products %}
+                    <tr>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.price }} руб.</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <h3>Покупатели</h3>
+
+            {% if customers %}
+                <table border="1">
+                    <tr>
+                        <th>Имя</th>
+                        <th>Адрес</th>
+                        <th>Покупок</th>
+                        <th>Сумма</th>
+                        <th>Скидка</th>
+                        <th>К оплате</th>
+                    </tr>
+
+                    {% for customer in customers %}
+                        <tr>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.address }}</td>
+                            <td>{{ customer.purchases.count }}</td>
+                            <td>{{ customer.total_spent }} руб.</td>
+                            <td>{{ customer.discount_percent }}%</td>
+                            <td>{{ customer.total_with_discount }} руб.</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>Покупателей пока нет.</p>
+            {% endif %}
+
+            <h3>Оформить покупку</h3>
+
+            <p>
+                <a href="/buy/">Перейти к оформлению покупки</a>
+            </p>
+        </div>
+    </body>
 </html>
