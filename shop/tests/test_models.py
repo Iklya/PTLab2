@@ -93,11 +93,7 @@ class DiscountTestCase(TestCase):
             product=old_product
         )
 
-        # Исторические покупки не влияют
-        # на скидку новой корзины.
         self.assertEqual(calculate_discount(1000), 0)
-
-        # Корзина на 6000 рублей дает только 3%.
         self.assertEqual(calculate_discount(6000), 3)
 
     def test_discount_amount(self):
